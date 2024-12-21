@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSR Chatbot</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 20px;
+      }
+      #chat-container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      #chat-output {
+        height: 300px;
+        overflow-y: scroll;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+      }
+      .user-message {
+        background-color: #e1f5fe;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+      .bot-message {
+        background-color: #dcedc8;
+        padding: 5px 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+      input[type="text"] {
+        width: calc(100% - 30px);
+        padding: 10px;
+        margin-right: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      button {
+        padding: 10px;
+        border: 1px solid #ddd;
+        background-color: #4caf50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chat-container">
+      <h2>CSR Chatbot</h2>
+      <div id="chat-output"></div>
+      <div>
+        <input
+          type="text"
+          id="user-input"
+          placeholder="Ask about sustainability or social impact..."
+        />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <script>
+      function sendMessage() {
+        const userMessage = document.getElementById("user-input").value;
+        if (userMessage.trim() === "") return;
+
+        // Display user message in chat
+        const chatOutput = document.getElementById("chat-output");
+        chatOutput.innerHTML += `<div class="user-message">${userMessage}</div>`;
+        document.getElementById("user-input").value = "";
+
+        // Send user message to the backend via API
+        fetch("http://127.0.0.1:5000/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: userMessage }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const botReply = data.response;
+            chatOutput.innerHTML += `<div class="bot-message">${botReply}</div>`;
+            chatOutput.scrollTop = chatOutput.scrollHeight; // Scroll to the latest message
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
