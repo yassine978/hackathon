@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-jojsfofncdpjcctest
-
-zcl^^kzsekfùze
-;zzf;
-=======
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 import openai
@@ -84,4 +78,3 @@ def generate_strategy(user_input, user_option):
 
 if __name__ == '__main__':
     app.run(debug=True)
->>>>>>> fatma
